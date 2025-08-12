@@ -35,7 +35,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-
-    public User(@NotBlank(message = "Name cannot be blank") String name, @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank") String email, @NotNull(message = "Role cannot be null") Role role) {
-    }
 }

@@ -1,50 +1,55 @@
 package org.example.controller;
 
-import org.example.dto.PaymentDto;
+import jakarta.validation.Valid;
 import org.example.model.Payment;
-import org.example.model.response.NewPaymentResponse;
+import org.example.model.request.PaymentCreateRequest;
+import org.example.model.request.PaymentUpdateRequest;
 import org.example.service.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/payments")
+@RequestMapping("/payments")
 public class PaymentController {
+
     private final PaymentService paymentService;
 
+    @Autowired
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 
-    @PostMapping("/process")
-    public ResponseEntity<Payment> addPayment(@RequestBody PaymentDto paymentDto) {
-        Payment newpaymentResponse = paymentService.processPayment(paymentDto);
-        System.out.println("Processing payment request: " + paymentDto);
-        System.out.println("Processing payment response: " + newpaymentResponse);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newpaymentResponse);
+    @PostMapping
+    public ResponseEntity<Payment> createPayment(@Valid @RequestBody PaymentCreateRequest request) {
+        Payment createdPayment = paymentService.createPayment(request);
+        return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<PaymentDto> updatePayment(@RequestBody PaymentDto paymentDto) {
-        // Logic to update the payment
-        System.out.println("Updating payment: " + paymentDto);
-        return ResponseEntity.ok(paymentDto);
+    @GetMapping
+    public ResponseEntity<List<Payment>> getAllPayments() {
+        List<Payment> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
     }
 
-    @PostMapping("/delete/{paymentId}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId) {
-        // Logic to delete the payment
-        System.out.println("Deleting payment with ID: " + paymentId);
+    @GetMapping("/{id}")
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+        Payment payment = paymentService.getPaymentById(id);
+        return ResponseEntity.ok(payment);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> updatePayment(@PathVariable Long id,
+                                                 @Valid @RequestBody PaymentUpdateRequest request) {
+        Payment updatedPayment = paymentService.updatePayment(id, request);
+        return ResponseEntity.ok(updatedPayment);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+        paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<PaymentDto> getPayment(@PathVariable Long paymentId) {
-        // Logic to retrieve the payment
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setId(paymentId);
-        System.out.println("Retrieving payment with ID: " + paymentId);
-        return ResponseEntity.ok(paymentDto);
     }
 }

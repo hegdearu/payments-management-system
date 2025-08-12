@@ -3,6 +3,7 @@ package org.example.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.enums.PaymentCategory;
 import org.example.enums.PaymentStatus;
 import org.example.enums.PaymentType;
@@ -16,6 +17,8 @@ import jakarta.validation.constraints.Positive;
 @Data
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "payments")
 public class Payment {
     @Id

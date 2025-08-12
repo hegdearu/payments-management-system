@@ -25,7 +25,12 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserCreateRequest request) {
         validateEmailUniqueness(request.getEmail());
 
-        User user = new User(request.getName(), request.getEmail(), request.getRole());
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .role(request.getRole())
+                .build();
+
         return userRepository.save(user);
     }
 

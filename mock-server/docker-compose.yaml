@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:14.12
+    restart: always
+    ports:
+      - "6543:5432"
+    environment:
+      POSTGRES_USER: zeta
+      POSTGRES_PASSWORD: zeta
+      POSTGRES_DB: payments_management_system
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
